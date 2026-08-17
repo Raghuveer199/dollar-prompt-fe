@@ -46,7 +46,7 @@ export default function LandingPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors font-medium">
+          <Link href="/login" className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors font-medium">
             Sign in
           </Link>
           <Link

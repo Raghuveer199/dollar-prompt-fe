@@ -7,9 +7,9 @@ import { TopBar } from "@/components/common/top-bar";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/";
+  const isPublicPage = pathname === "/" || pathname === "/login" || pathname === "/signup";
 
-  if (isLandingPage) {
+  if (isPublicPage) {
     return (
       <main className="flex-1 h-full w-full overflow-hidden font-sans text-zinc-900 dark:text-zinc-100">
         {children}
