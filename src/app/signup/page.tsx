@@ -68,7 +68,7 @@ export default function SignupPage() {
         <div className="flex justify-center mb-6">
           <Link href="/" className="inline-block transition-transform hover:scale-105">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/symbol-logo.png" alt="Dollar Prompt" className="size-12 object-contain" />
+            <img src="/symbol-logo.png" alt="Dollar Prompt" className="size-12 rounded-lg object-contain" />
           </Link>
         </div>
 

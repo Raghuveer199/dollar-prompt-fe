@@ -110,7 +110,7 @@ export function TopBar() {
         {/* Mobile Logo Link */}
         <Link href="/dashboard" className="md:hidden flex items-center gap-2 shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/symbol-logo.png" alt="Dollar Prompt" className="size-6 object-contain" />
+          <img src="/symbol-logo.png" alt="Dollar Prompt" className="size-6 rounded-lg object-contain" />
         </Link>
 
         {/* Search trigger */}

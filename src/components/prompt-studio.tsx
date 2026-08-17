@@ -999,9 +999,9 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
           {/* Chat Header */}
           <div className="shrink-0 flex items-center gap-2 px-4 py-3 border-b border-zinc-100 dark:border-zinc-900">
             {/* Assistant icon */}
-            <div className="size-6 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
+            <div className="size-6 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 object-contain" />
+              <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 rounded-lg object-contain" />
             </div>
             <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Session</span>
             <span className="ml-auto text-xs bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] dark:text-blue-400 font-mono font-bold px-2 py-0.5 rounded">
@@ -1013,9 +1013,9 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
           <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth" style={{ overflowAnchor: "none" }}>
             {activeSession.messages.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center px-6 sm:px-8 gap-3">
-                <div className="size-10 rounded-full overflow-hidden flex items-center justify-center">
+                <div className="size-10 rounded-lg overflow-hidden flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/symbol-logo.png" alt="AI Assistant" className="size-10 object-contain" />
+                  <img src="/symbol-logo.png" alt="AI Assistant" className="size-10 rounded-lg object-contain" />
                 </div>
                 <p className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">Start a conversation</p>
                 <p className="text-xs text-zinc-400 dark:text-zinc-600 max-w-[180px]">
@@ -1048,11 +1048,11 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
                       {/* Avatar — only show for first in group */}
                       {!isUser && (
                         <div className={cn(
-                          "size-6 rounded-full shrink-0 mt-1 flex items-center justify-center overflow-hidden",
+                          "size-6 rounded-lg shrink-0 mt-1 flex items-center justify-center overflow-hidden",
                           isSameGroup ? "invisible" : ""
                         )}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 object-contain" />
+                          <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 rounded-lg object-contain" />
                         </div>
                       )}
 
