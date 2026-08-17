@@ -1,12 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth-context";
+import { PromptStore } from "@/lib/prompt-store";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTarget = searchParams.get("redirect") || "/dashboard";
+  const { login, getAnonymousDraft, clearAnonymousDraft } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,11 +49,32 @@ export default function LoginPage() {
     return valid;
   };
 
+  const completeLoginSuccess = (userEmail: string) => {
+    login(userEmail);
+    // Check if there is an anonymous draft to migrate
+    const draft = getAnonymousDraft();
+    let target = redirectTarget;
+    if (draft && draft.title) {
+      const createdPrompt = PromptStore.createPrompt({
+        title: draft.title || "Untitled Draft Prompt",
+        category: draft.category || "General",
+        initialContent: draft.initialContent || "",
+        tags: draft.tags || ["draft"],
+      });
+      clearAnonymousDraft();
+      target = `/prompt/${createdPrompt.id}`;
+    }
+
+    setIsSuccess(true);
+    setTimeout(() => {
+      router.push(target);
+    }, 600);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // Prototype invalid credentials condition
     if (email.trim().toLowerCase() === "invalid@example.com") {
       setIsLoading(true);
       setTimeout(() => {
@@ -58,13 +85,9 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-
     setTimeout(() => {
       setIsLoading(false);
-      setIsSuccess(true);
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 600);
+      completeLoginSuccess(email.trim());
     }, 1200);
   };
 
@@ -73,10 +96,7 @@ export default function LoginPage() {
     setGeneralError("");
     setTimeout(() => {
       setIsGoogleLoading(false);
-      setIsSuccess(true);
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 600);
+      completeLoginSuccess("google.user@example.com");
     }, 1400);
   };
 
@@ -370,5 +390,13 @@ export default function LoginPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAFAF9] dark:bg-[#090D14]" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

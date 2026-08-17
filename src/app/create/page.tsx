@@ -4,6 +4,7 @@ import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { PromptStore } from "@/lib/prompt-store";
 import { TemplateStore } from "@/lib/template-store";
+import { useAuth } from "@/lib/auth-context";
 import type { Prompt } from "@/lib/types";
 
 const SEED_CUSTOMER_SUPPORT_CONTENT = `You are a professional customer support agent for Dollar Prompt. Your primary responsibility is handling customer refund requests in a polite, helpful, and clear manner.
@@ -23,6 +24,8 @@ When handling a query:
 export default function CreatePage({ searchParams }: { searchParams: Promise<{ template?: string }> }) {
   const resolvedParams = use(searchParams);
   const router = useRouter();
+  const { isLoggedIn, saveAnonymousDraft } = useAuth();
+
   const [createInput, setCreateInput] = useState("");
   const [showDraft, setShowDraft] = useState(false);
   const [draftContent, setDraftContent] = useState(SEED_CUSTOMER_SUPPORT_CONTENT);
@@ -47,6 +50,18 @@ export default function CreatePage({ searchParams }: { searchParams: Promise<{ t
   };
 
   const handleStartWorkspace = () => {
+    if (!isLoggedIn) {
+      // Store draft anonymously so user won't lose it upon login
+      saveAnonymousDraft({
+        title: draftTitle,
+        category: "General",
+        initialContent: draftContent,
+        tags: ["draft"],
+      });
+      router.push("/login?redirect=/create");
+      return;
+    }
+
     const prompts = PromptStore.getPrompts();
     const newPromptId = `prompt-${Math.random().toString(36).substr(2, 9)}`;
     const newPrompt: Prompt = {

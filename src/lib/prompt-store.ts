@@ -123,6 +123,40 @@ export const PromptStore = {
     }
   },
 
+  createPrompt(data: { title: string; category?: string; initialContent: string; tags?: string[] }): Prompt {
+    const prompts = this.getPrompts();
+    const id = `prompt-${Math.random().toString(36).substring(2, 9)}`;
+    const newPrompt: Prompt = {
+      id,
+      title: data.title,
+      description: `Custom ${data.category || "General"} prompt.`,
+      currentVersion: 1,
+      versions: [
+        {
+          number: 1,
+          content: data.initialContent,
+          changeSummary: "Initial draft",
+          createdAt: new Date().toLocaleString(),
+          createdFrom: data.initialContent,
+        },
+      ],
+      sessions: [
+        {
+          id: `session-${Math.random().toString(36).substring(2, 9)}`,
+          promptId: id,
+          messages: [],
+          createdAt: new Date().toLocaleString(),
+          updatedAt: new Date().toLocaleString(),
+        },
+      ],
+      createdAt: new Date().toLocaleString(),
+      updatedAt: new Date().toLocaleString(),
+      tags: data.tags || ["draft"],
+    };
+    this.savePrompts([...prompts, newPrompt]);
+    return newPrompt;
+  },
+
   savePrompts(prompts: Prompt[]): void {
     if (typeof window === "undefined") return;
     try {

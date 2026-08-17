@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PromptStore } from "@/lib/prompt-store";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth-context";
 
 import type { Prompt, Version, Session, Message, Proposal, ProposedChange } from "@/lib/types";
 export type { Prompt, Version, Session, Message, Proposal, ProposedChange };
@@ -259,6 +260,7 @@ export function CreatePrompt() {
 // 4. PROMPT WORKSPACE DEVELOPMENT COMPONENT
 export function PromptWorkspace({ promptId }: { promptId: string }) {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
 
   // UI Local Workspace states
@@ -999,9 +1001,9 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
           {/* Chat Header */}
           <div className="shrink-0 flex items-center gap-2 px-4 py-3 border-b border-zinc-100 dark:border-zinc-900">
             {/* Assistant icon */}
-            <div className="size-6 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
+            <div className="size-6 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 rounded-lg object-contain" />
+              <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 object-contain" />
             </div>
             <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Session</span>
             <span className="ml-auto text-xs bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] dark:text-blue-400 font-mono font-bold px-2 py-0.5 rounded">
@@ -1013,9 +1015,9 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
           <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth" style={{ overflowAnchor: "none" }}>
             {activeSession.messages.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center px-6 sm:px-8 gap-3">
-                <div className="size-10 rounded-lg overflow-hidden flex items-center justify-center">
+                <div className="size-10 rounded-full overflow-hidden flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/symbol-logo.png" alt="AI Assistant" className="size-10 rounded-lg object-contain" />
+                  <img src="/symbol-logo.png" alt="AI Assistant" className="size-10 object-contain" />
                 </div>
                 <p className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">Start a conversation</p>
                 <p className="text-xs text-zinc-400 dark:text-zinc-600 max-w-[180px]">
@@ -1048,11 +1050,11 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
                       {/* Avatar — only show for first in group */}
                       {!isUser && (
                         <div className={cn(
-                          "size-6 rounded-lg shrink-0 mt-1 flex items-center justify-center overflow-hidden",
+                          "size-6 rounded-full shrink-0 mt-1 flex items-center justify-center overflow-hidden",
                           isSameGroup ? "invisible" : ""
                         )}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 rounded-lg object-contain" />
+                          <img src="/symbol-logo.png" alt="AI Assistant" className="size-6 object-contain" />
                         </div>
                       )}
 
@@ -1062,13 +1064,13 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
                           "max-w-[88%] sm:max-w-[82%] px-3.5 py-2.5 text-[13.5px] leading-relaxed break-words",
                           isUser
                             ? [
-                                "rounded-2xl rounded-tr-sm",
-                                "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900",
-                              ]
+                              "rounded-2xl rounded-tr-sm",
+                              "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900",
+                            ]
                             : [
-                                "rounded-2xl rounded-tl-sm",
-                                "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100",
-                              ]
+                              "rounded-2xl rounded-tl-sm",
+                              "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100",
+                            ]
                         )}
                       >
                         <p className="whitespace-pre-wrap">{msg.text}</p>
@@ -1083,46 +1085,68 @@ export function PromptWorkspace({ promptId }: { promptId: string }) {
 
           {/* Chat Input — auto-grow textarea + icon send button */}
           <div className="shrink-0 border-t border-zinc-100 dark:border-zinc-900 p-2.5 sm:p-3">
-            <form
-              onSubmit={handleSendMessage}
-              className="flex items-end gap-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 focus-within:ring-2 focus-within:ring-zinc-300 dark:focus-within:ring-zinc-700 transition-shadow"
-            >
-              <textarea
-                value={chatInput}
-                onChange={(e) => {
-                  setChatInput(e.target.value);
-                  e.target.style.height = "auto";
-                  e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    if (chatInput.trim()) handleSendMessage(e as unknown as React.FormEvent);
-                  }
-                }}
-                placeholder="Message Dollar Prompt..."
-                rows={1}
-                className="flex-1 resize-none bg-transparent text-[13.5px] leading-relaxed text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none min-h-[24px] max-h-[120px] py-0.5"
-                style={{ overflowY: "hidden" }}
-              />
-              <button
-                type="submit"
-                disabled={!chatInput.trim()}
-                className={cn(
-                  "shrink-0 size-7 rounded-full flex items-center justify-center transition-all mb-0.5",
-                  chatInput.trim()
-                    ? "bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-                    : "bg-zinc-200 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600 cursor-not-allowed"
-                )}
+            {!isLoggedIn ? (
+              <div className="bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-3.5 text-center flex flex-col items-center gap-2">
+                <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+                  Sign in required to chat & refine prompts
+                </p>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                  Your work and initial drafts are safely preserved.
+                </p>
+                <Link
+                  href={`/login?redirect=${encodeURIComponent(`/prompt/${activePrompt.id}`)}`}
+                  className="mt-1 text-xs bg-[#0066FF] hover:bg-[#0052CC] text-white font-semibold px-4 py-1.5 rounded-xl transition-colors shadow-xs"
+                >
+                  Sign in to continue
+                </Link>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSendMessage}
+                className="flex items-end gap-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 focus-within:ring-2 focus-within:ring-zinc-300 dark:focus-within:ring-zinc-700 transition-shadow"
               >
-                <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 19V5M5 12l7-7 7 7"/>
-                </svg>
+                <textarea
+                  value={chatInput}
+                  onChange={(e) => {
+                    setChatInput(e.target.value);
+                    e.target.style.height = "auto";
+                    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      if (chatInput.trim()) handleSendMessage(e as unknown as React.FormEvent);
+                    }
+                  }}
+                  placeholder="Message Dollar Prompt..."
+                  rows={1}
+                  className="flex-1 resize-none bg-transparent text-[13.5px] leading-relaxed text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none min-h-[24px] max-h-[120px] py-0.5"
+                />
+                <button
+                  type="submit"
+                  disabled={!chatInput.trim()}
+                  className={cn(
+                    "size-7 rounded-xl flex items-center justify-center shrink-0 transition-all mb-[1px]",
+                    chatInput.trim()
+                      ? "bg-[#0066FF] text-white hover:bg-[#0052CC]"
+                      : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
+                  )}
+                >
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                  </svg>
+                </button>
+              </form>
+            )}
+            <div className="flex items-center justify-between mt-2 px-1 text-[10.5px] text-zinc-400 dark:text-zinc-600 font-mono">
+              <span>{isLoggedIn ? "Enter ↵ to send · Shift+Enter for newline" : "Preserving session draft"}</span>
+              <button
+                onClick={() => setIsHistoryOpen(true)}
+                className="hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors"
+              >
+                Version history ({activePrompt.versions.length})
               </button>
-            </form>
-            <p className="text-[10px] text-zinc-400 dark:text-zinc-600 text-center mt-1.5">
-              Enter ↵ to send · Shift+Enter for newline
-            </p>
+            </div>
           </div>
         </div>
 

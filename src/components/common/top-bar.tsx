@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { PromptStore } from "@/lib/prompt-store";
 import { useTheme } from "@/components/theme-provider";
+import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 // Search icon
@@ -54,6 +55,7 @@ export function TopBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const { user, isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
     setPrompts(PromptStore.getPrompts());
@@ -133,6 +135,34 @@ export function TopBar() {
           <PlusIcon />
           <span className="hidden sm:inline">Create</span>
         </Link>
+
+        {/* User Auth Info / Logout */}
+        {isLoggedIn ? (
+          <div className="flex items-center gap-2 pl-2 border-l border-zinc-200 dark:border-zinc-800 shrink-0">
+            <span className="hidden sm:inline-block text-xs font-semibold text-zinc-700 dark:text-zinc-300 max-w-[120px] truncate">
+              {user?.name || user?.email}
+            </span>
+            <button
+              onClick={() => {
+                logout();
+                router.push("/login");
+              }}
+              title="Sign out"
+              className="text-xs text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 p-1 transition-colors"
+            >
+              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="text-xs font-semibold text-[#0066FF] hover:underline px-2 py-1 shrink-0"
+          >
+            Sign in
+          </Link>
+        )}
       </header>
 
       {/* Mobile Drawer / Navigation Dropdown */}
