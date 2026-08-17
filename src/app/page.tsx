@@ -34,9 +34,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-30 flex items-center justify-between px-8 py-4 bg-[#FAFAF9]/90 dark:bg-[#09090B]/90 backdrop-blur-sm border-b border-zinc-200/60 dark:border-zinc-800/60">
         <div className="flex items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/light-full-logo.png" alt="Dollar Prompt" className="h-6 w-auto object-contain dark:hidden" />
+          <img src="/light-full-logo.png" alt="Dollar Prompt" className="h-12 w-auto object-contain dark:hidden rounded-lg" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/dark-full-logo.png" alt="Dollar Prompt" className="h-6 w-auto object-contain hidden dark:block" />
+          <img src="/dark-full-logo.png" alt="Dollar Prompt" className="h-12 w-auto object-contain hidden dark:block rounded-lg" />
         </div>
 
         <div className="flex items-center gap-6 text-xs font-medium text-zinc-600 dark:text-zinc-400">
@@ -154,7 +154,7 @@ export default function LandingPage() {
                       <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950 px-1.5 py-0.5 rounded">142 → 61 words</span>
                     </div>
                     <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 leading-tight">Shortened intro while preserving refund rules.</p>
-                    
+
                     <div className="flex gap-1.5 pt-1">
                       <span className={cn("text-[10px] px-2 py-1 rounded font-semibold transition-colors", demoStep === "applied" ? "bg-emerald-600 text-white" : "bg-emerald-600 text-white hover:bg-emerald-700")}>
                         {demoStep === "applied" ? "✓ Applied v13" : "Apply → v13"}
@@ -228,19 +228,19 @@ export default function LandingPage() {
                 <div className="pt-2 space-y-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
                   <p className="flex items-center gap-1.5">
                     <svg className="size-3 text-red-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                     Manual copy & paste
                   </p>
                   <p className="flex items-center gap-1.5">
                     <svg className="size-3 text-red-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                     Wonder what actually changed
                   </p>
                   <p className="flex items-center gap-1.5">
                     <svg className="size-3 text-red-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                     Lose the old version that worked
                   </p>
